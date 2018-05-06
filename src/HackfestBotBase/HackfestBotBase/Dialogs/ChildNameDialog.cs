@@ -46,7 +46,7 @@ namespace HackfestBotBase.Dialogs
                 await context.PostAsync(
                     "I'm really sorry, but unfortunately I can't register this name because it includes or resembles an official title or rank (like Justice or Sir)");
                 var showAskNameDialog = _dialogBuilder.BuildShowSuggestedActionsDialog(context.Activity.AsMessageActivity(),
-                    "Do you maybe have another name in mind? ", "Yes", "No", "Suggest a name");
+                    "Do you maybe have another name in mind? 🙂", "Yes", "No", "Suggest a name");
                 context.Call(showAskNameDialog, AfterShowingAskNameDialogActions);
             }
         }
@@ -75,7 +75,7 @@ namespace HackfestBotBase.Dialogs
                 case "Suggest a name":
                     await context.PostAsync("You can try this website for some  ideas for names");
                     await context.PostAsync("https://smartstart.services.govt.nz/news/baby-names");
-                    await context.PostAsync("Let me know when you have found something you like ");
+                    await context.PostAsync("Let me know when you have found something you like 🙂");
                     context.Wait(MessageReceivedAsync);
                     break;
                 default:

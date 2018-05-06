@@ -40,39 +40,63 @@ namespace HackfestBotBase.Dialogs
              */
 
 
-            await _messageService.PostAsync("Kia ora, Joanna! Nice to meet you. My name is Mōhio, and I'm here to assist you.");
+            await _messageService.PostAsync(
+                "Kia ora, Joanna! Nice to meet you. My name is Mōhio, and I'm here to assist you.");
             ShowSuggestedButtons(context);
 
         }
 
-       
+
 
         private void ShowSuggestedButtons(IDialogContext context)
         {
-            PromptDialog.Confirm(context, ResumeAfterConfirmationIntent, $"Did I understand correctly - that you'd like to register your baby?", $"Sorry I don't understand - try again!");
+            PromptDialog.Confirm(context, ResumeAfterConfirmationIntent,
+                $"Did I understand correctly - that you'd like to register your baby?",
+                $"Sorry I don't understand - try again!");
 
         }
 
         private async Task ResumeAfterConfirmationIntent(IDialogContext context, IAwaitable<bool> result)
         {
             bool confirmation = await result;
-
             switch (confirmation)
             {
                 case true:
-                    var showConfirmPregnantActionsDialog = _dialogBuilder.BuildShowSuggestedActionsDialog(context.Activity.AsMessageActivity(),
-                        "Fantastic! Are you pregnant or have you already given birth?", "I'm pregnant", "I have already given birth");
+                    await context.PostAsync("Congratulations, that's fantastic news! 😁");
+                    PromptDialog.Confirm(context, ResumeAfterConfirmationQuestion,
+                        "Is it okay if I ask you a few details about your child? It'll take about 6 minutes.",
+                        "Sorry I didn't get that - try again!");
+                    break;
+                default:
+                    PromptDialog.Confirm(context, ResumeAfterConfirmationIntent,
+                        "Are you sure? Did I understand correctly - that you'd like to register your baby?",
+                        "Sorry I didn't get that - try again!");
+                    break;
+            }
+
+        }
+
+        private async Task ResumeAfterConfirmationQuestion(IDialogContext context, IAwaitable<bool> result)
+        {
+            bool confirmation = await result;
+            switch (confirmation)
+            {
+                case true:
+                    var showConfirmPregnantActionsDialog = _dialogBuilder.BuildShowSuggestedActionsDialog(
+                        context.Activity.AsMessageActivity(),
+                        "Fantastic! Are you pregnant or have you already given birth?", "I'm pregnant",
+                        "I have already given birth");
                     context.Call(showConfirmPregnantActionsDialog, AfterShowingConfirmPregnantActions);
                     break;
                 default:
-                    PromptDialog.Confirm(context, ResumeAfterConfirmationIntent, "Are you sure? Did I understand correctly - that you'd like to register your baby?", "Sorry I didn't get that - try again!");
+                    await context.PostAsync("Goodbye!");
                     break;
             }
         }
 
         #region Pregnant
 
-        
+
 
 
         private async Task AfterShowingConfirmPregnantActions(IDialogContext context, IAwaitable<object> result)
@@ -87,8 +111,9 @@ namespace HackfestBotBase.Dialogs
 
             if (message == "I'm pregnant")
             {
-                await context.PostAsync("Great! How many weeks have you been pregnant for?");
-                PregnantWeeksDialog pregnantWeeksDialog = _dialogBuilder.BuildPregnantWeeksDialog(context.Activity.AsMessageActivity());
+                await context.PostAsync("Great! 🙂 How many weeks have you been pregnant for?");
+                PregnantWeeksDialog pregnantWeeksDialog =
+                    _dialogBuilder.BuildPregnantWeeksDialog(context.Activity.AsMessageActivity());
                 context.Call(pregnantWeeksDialog, AfterShowingPregnantWeeksDialog);
             }
             else
@@ -104,16 +129,19 @@ namespace HackfestBotBase.Dialogs
             await context.PostAsync(message);
             CallConfirmIfHaveChoosenName(context);
         }
+
         #endregion
 
 
         #region Child name
 
-        
+
 
         private void CallConfirmIfHaveChoosenName(IDialogContext context)
         {
-            PromptDialog.Confirm(context, ResumeAfterConfirmationIfHaveChoosenName, $"Have you chosen a name for your baby?", $"Sorry I don't understand - try again!\n Have you chosen a name for your baby?");
+            PromptDialog.Confirm(context, ResumeAfterConfirmationIfHaveChoosenName,
+                $"Have you chosen a name for your baby?",
+                $"Sorry I don't understand - try again!\n Have you chosen a name for your baby?");
 
         }
 
@@ -125,14 +153,15 @@ namespace HackfestBotBase.Dialogs
             {
                 case true:
                     await context.PostAsync(
-                        "Perfect. Can you please type out the full name you have chosen for your baby?\nPlease check that you've spelled it correctly!");
+                        "Perfect. Can you please type out the full name you have chosen for your baby?\nPlease check that you've spelled it correctly! 😉");
                     break;
                 default:
                     await context.PostAsync("You can try this website for some  ideas for names");
                     await context.PostAsync("https://smartstart.services.govt.nz/news/baby-names");
-                    await context.PostAsync("Let me know when you have found something you like ");
+                    await context.PostAsync("Let me know when you have found something you like 🙂");
                     break;
             }
+
             ChildNameDialog childNameDialog = _dialogBuilder.BuildChildNameDialog(context.Activity.AsMessageActivity());
             context.Call(childNameDialog, AfterShowingChildNameDialog);
         }
@@ -141,8 +170,9 @@ namespace HackfestBotBase.Dialogs
         {
             string name = await result;
             _botDataService.SetPreferredName(context, name);
-            await context.PostAsync($"{name} is an excellent choice!");
-            var showConfirmGenderActionsDialog = _dialogBuilder.BuildShowSuggestedActionsDialog(context.Activity.AsMessageActivity(),
+            await context.PostAsync($"{name} is an excellent choice! 😍");
+            var showConfirmGenderActionsDialog = _dialogBuilder.BuildShowSuggestedActionsDialog(
+                context.Activity.AsMessageActivity(),
                 "Do you know the gender of your child?", "Boy", "Girl", "Unsure");
             context.Call(showConfirmGenderActionsDialog, AfterShowingConfirmGenderActions);
 
@@ -151,6 +181,7 @@ namespace HackfestBotBase.Dialogs
         #endregion
 
         #region Gender
+
         private async Task AfterShowingConfirmGenderActions(IDialogContext context, IAwaitable<object> result)
         {
             await result;
@@ -160,7 +191,8 @@ namespace HackfestBotBase.Dialogs
         private async Task ResumeConfirmGender(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             await context.PostAsync("Great. We're almost done with the questions.");
-            var showConfirmDescendantActionsDialog = _dialogBuilder.BuildShowSuggestedActionsDialog(context.Activity.AsMessageActivity(),
+            var showConfirmDescendantActionsDialog = _dialogBuilder.BuildShowSuggestedActionsDialog(
+                context.Activity.AsMessageActivity(),
                 "Is your baby the descendant of a New Zealand Māori?", "Yes", "No", "Unsure");
             context.Call(showConfirmDescendantActionsDialog, AfterShowingConfirmDescendantActions);
         }
@@ -169,6 +201,7 @@ namespace HackfestBotBase.Dialogs
         #endregion
 
         #region Descendant
+
         private async Task AfterShowingConfirmDescendantActions(IDialogContext context, IAwaitable<object> result)
         {
             await result;
@@ -178,7 +211,8 @@ namespace HackfestBotBase.Dialogs
         private async Task ResumeConfirmDescendant(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             await context.PostAsync("OK.");
-            var showConfirmPhoneActionsDialog = _dialogBuilder.BuildShowSuggestedActionsDialog(context.Activity.AsMessageActivity(),
+            var showConfirmPhoneActionsDialog = _dialogBuilder.BuildShowSuggestedActionsDialog(
+                context.Activity.AsMessageActivity(),
                 "Is your phone number still 021 123 456 789?", "Yes", "No", "I don't have a phone");
             context.Call(showConfirmPhoneActionsDialog, AfterShowingConfirmPhoneActions);
         }
@@ -204,9 +238,10 @@ namespace HackfestBotBase.Dialogs
                 await context.PostAsync("Great!");
                 ShowAddressDialog(context);
             }
-            else if(message == "No")
+            else if (message == "No")
             {
-                PromptDialog.Text(context, ResumeAfterConfirmationPhoneText, "Please tell me your current phone number:", "Sorry I didn't get that - try again!");
+                PromptDialog.Text(context, ResumeAfterConfirmationPhoneText,
+                    "Please tell me your current phone number:", "Sorry I didn't get that - try again!");
 
             }
             else
@@ -220,7 +255,8 @@ namespace HackfestBotBase.Dialogs
         private void ShowAddressDialog(IDialogContext context)
         {
             PromptDialog.Confirm(context, ResumeAfterConfirmationAddress,
-                "And do you still live at 6 Hathaway Ave, Karori in Wellington?", "Sorry I didn't get that - try again!");
+                "And do you still live at 6 Hathaway Ave, Karori in Wellington?",
+                "Sorry I didn't get that - try again!");
         }
 
         private async Task ResumeAfterConfirmationPhoneText(IDialogContext context, IAwaitable<string> result)
@@ -239,6 +275,7 @@ namespace HackfestBotBase.Dialogs
 
 
         #region Address
+
         private async Task ResumeAfterConfirmationAddress(IDialogContext context, IAwaitable<bool> result)
         {
             bool confirmation = await result;
@@ -250,7 +287,8 @@ namespace HackfestBotBase.Dialogs
                     await ShowConfirmFinacialSupportDialog(context, name);
                     break;
                 default:
-                    PromptDialog.Text(context, ResumeAfterConfirmationAddressText, "Please tell me your current address:", "Sorry I didn't get that - try again!");
+                    PromptDialog.Text(context, ResumeAfterConfirmationAddressText,
+                        "Please tell me your current address:", "Sorry I didn't get that - try again!");
                     break;
             }
         }
@@ -258,10 +296,11 @@ namespace HackfestBotBase.Dialogs
         private async Task ShowConfirmFinacialSupportDialog(IDialogContext context, string name)
         {
             await context.PostAsync(
-                $"Fantastic!\nOne last thing\nWe'd love to give you a hand in financially supporting {name}");
+                $"Fantastic! 😁\nOne last thing\nWe'd love to give you a hand in financially supporting {name}");
             var showConfirmFinacialSupportActionsDialog = _dialogBuilder.BuildShowSuggestedActionsDialog(
                 context.Activity.AsMessageActivity(),
-                $"If you want, we can set up a savings account for {name} right now. Would you like to do that?", "Yes", "No",
+                $"If you want, we can set up a savings account for {name} right now. Would you like to do that?", "Yes",
+                "No",
                 "Tell me more");
             context.Call(showConfirmFinacialSupportActionsDialog, AfterShowingConfirmFinacialSupportActions);
         }
@@ -275,6 +314,7 @@ namespace HackfestBotBase.Dialogs
             await ShowConfirmFinacialSupportDialog(context, name);
 
         }
+
         #endregion
 
         #region Account
@@ -305,8 +345,9 @@ namespace HackfestBotBase.Dialogs
                     await context.PostAsync(
                         "The government will add $100 per month to her account. It won't cost you a cent.");
                     await context.PostAsync($"And when {name} turns 18, she can access the money we've saved up");
-                    await context.PostAsync("At the current interest rates, that'll be just over NZ$ 32 000! ");
-                    PromptDialog.Confirm(context, ResumeAfterConfirmationAccount, "Should we open a savings account for him/her?", "Sorry I didn't get that - try again!");
+                    await context.PostAsync("At the current interest rates, that'll be just over NZ$ 32 000! 😮");
+                    PromptDialog.Confirm(context, ResumeAfterConfirmationAccount,
+                        "Should we open a savings account for him/her?", "Sorry I didn't get that - try again!");
 
                     break;
             }
@@ -331,6 +372,7 @@ namespace HackfestBotBase.Dialogs
                 default:
                     break;
             }
+
             await ShowConfirmEmailDialog(context, name);
 
         }
@@ -339,7 +381,8 @@ namespace HackfestBotBase.Dialogs
         {
             await context.PostAsync("We're pretty much done here");
             _botDataService.SetEmail(context, "jane.johnson@gmail.com");
-            PromptDialog.Confirm(context, ResumeAfterConfirmationEmail, "Is jane.johnson@gmail.com still your email address?",
+            PromptDialog.Confirm(context, ResumeAfterConfirmationEmail,
+                "Is jane.johnson@gmail.com still your email address?",
                 "Sorry I didn't get that - try again!");
         }
 
@@ -357,7 +400,8 @@ namespace HackfestBotBase.Dialogs
                     await ShowConfirmOtherRequestDialog(context);
                     break;
                 default:
-                    PromptDialog.Text(context, ResumeAfterConfirmationEmailText, "Please tell me your current email address:", "Sorry I didn't get that - try again!");
+                    PromptDialog.Text(context, ResumeAfterConfirmationEmailText,
+                        "Please tell me your current email address:", "Sorry I didn't get that - try again!");
 
                     break;
             }
@@ -408,6 +452,7 @@ namespace HackfestBotBase.Dialogs
                     await SendFurtherInformaiton(context);
                     break;
             }
+
             context.Wait(MessageReceivedAsync);
         }
 
@@ -415,6 +460,7 @@ namespace HackfestBotBase.Dialogs
         {
             await context.PostAsync("Great!");
             await context.PostAsync("Best of luck with the rest of your pregnancy and take care");
+            await context.PostAsync("😃");
             await context.PostAsync("Goodbye!");
         }
 
