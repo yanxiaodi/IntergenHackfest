@@ -15,5 +15,15 @@ namespace HackfestBotBase.Services
         {
             return botData.GetValueOrDefault<string>(DataStoreKey.PreferredFirstName);
         }
+
+        public void SetEmail(IBotData botData, string name)
+        {
+            botData.SetValue(DataStoreKey.Email, name);
+        }
+
+        public string GetEmail(IBotData botData)
+        {
+            return botData.GetValueOrDefault<string>(DataStoreKey.Email);
+        }
     }
 }

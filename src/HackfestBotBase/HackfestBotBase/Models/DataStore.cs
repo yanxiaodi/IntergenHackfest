@@ -4,6 +4,7 @@
     {
         User,
         Conversation,
-        PrivateConversation
+        PrivateConversation,
+        Email
     }
 }

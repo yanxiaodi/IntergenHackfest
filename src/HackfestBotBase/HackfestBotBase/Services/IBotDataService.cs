@@ -6,5 +6,8 @@ namespace HackfestBotBase.Services
     {
         void SetPreferredName(IBotData botData, string name);
         string GetPreferredName(IBotData botData);
+
+        void SetEmail(IBotData botData, string name);
+        string GetEmail(IBotData botData);
     }
 }
