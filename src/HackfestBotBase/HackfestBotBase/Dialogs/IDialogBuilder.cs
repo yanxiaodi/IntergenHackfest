@@ -10,5 +10,9 @@ namespace HackfestBotBase.Dialogs
         ShowSuggestedActionsDialog BuildShowSuggestedActionsDialog(IMessageActivity message, string prompt, params string[] options);
 
         NameDialog BuildNameDialog(IMessageActivity message);
+
+        PregnantWeeksDialog BuildPregnantWeeksDialog(IMessageActivity message);
+
+        ChildNameDialog BuildChildNameDialog(IMessageActivity message);
     }
 }

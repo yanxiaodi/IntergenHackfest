@@ -162,7 +162,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Dialogs\ChildNameDialog.cs" />
     <Compile Include="Dialogs\NameDialog.cs" />
+    <Compile Include="Dialogs\RootDialog.cs" />
+    <Compile Include="Dialogs\PregnantWeeksDialog.cs" />
     <Compile Include="IoC\DataStorageModule.cs" />
     <Compile Include="IoC\ServicesModule.cs" />
     <Compile Include="Models\DataStore.cs" />
@@ -181,6 +184,7 @@
     <Compile Include="Models\DataStoreKey.cs" />
     <Compile Include="Services\BotDataExtensions.cs" />
     <Compile Include="Services\BotDataService.cs" />
+    <Compile Include="Services\EnumExtensions.cs" />
     <Compile Include="Services\IBotDataService.cs" />
     <Compile Include="Services\IMessageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

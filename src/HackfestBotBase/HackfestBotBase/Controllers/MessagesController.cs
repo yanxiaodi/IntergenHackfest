@@ -26,7 +26,7 @@ namespace HackfestBotBase.Controllers
                 {
                     using (ILifetimeScope scope = DialogModule.BeginLifetimeScope(Conversation.Container, activity))
                     {
-                        await Conversation.SendAsync(activity, () => scope.Resolve<DemoDialog>());
+                        await Conversation.SendAsync(activity, () => scope.Resolve<RootDialog>());
                     }
                 }
                 catch (Exception e)

@@ -25,7 +25,20 @@ namespace HackfestBotBase.Dialogs
         {
             return CreateDialog(message, scope => scope.Resolve<NameDialog>());
         }
-        
+
+        public PregnantWeeksDialog BuildPregnantWeeksDialog(IMessageActivity message)
+        {
+            return CreateDialog(message, scope => scope.Resolve<PregnantWeeksDialog>());
+
+        }
+
+        public ChildNameDialog BuildChildNameDialog(IMessageActivity message)
+        {
+            return CreateDialog(message, scope => scope.Resolve<ChildNameDialog>());
+
+        }
+
+
         /*
          * For a new dialog registered with Autofac, use the private CreateDialog method below.
          *
@@ -45,5 +58,7 @@ namespace HackfestBotBase.Dialogs
         {
             return DialogModule.BeginLifetimeScope(Conversation.Container, message);
         }
+
+        
     }
 }

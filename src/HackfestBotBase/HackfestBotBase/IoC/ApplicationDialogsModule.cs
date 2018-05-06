@@ -18,6 +18,10 @@ namespace HackfestBotBase.IoC
 
             builder.RegisterType<DemoDialog>().AsSelf().InstancePerDependency();
             builder.RegisterType<NameDialog>().AsSelf().InstancePerDependency();
+            builder.RegisterType<RootDialog>().AsSelf().InstancePerDependency();
+            builder.RegisterType<PregnantWeeksDialog>().AsSelf().InstancePerDependency();
+            builder.RegisterType<ChildNameDialog>().AsSelf().InstancePerDependency();
+
 
             builder.Register((c, p) =>
                 new ShowSuggestedActionsDialog(
