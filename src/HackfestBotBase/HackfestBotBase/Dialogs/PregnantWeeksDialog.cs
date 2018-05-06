@@ -44,7 +44,7 @@ namespace HackfestBotBase.Dialogs
             }
             else
             {
-                await _messageService.PostAsync($"Please input valid number!");
+                await _messageService.PostAsync($"Please input a valid number!");
                 context.Wait(MessageReceivedAsync);
 
             }
