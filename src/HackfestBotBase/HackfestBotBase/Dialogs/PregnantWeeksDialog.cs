@@ -40,7 +40,15 @@ namespace HackfestBotBase.Dialogs
             if (int.TryParse(message, out weeks))
             {
                 //await _messageService.PostAsync($"Great! You have been pregnant for {weeks} weeks!");
-                context.Done<string>($"Great! You have been pregnant for {weeks} weeks!");
+                if (weeks <= 0 || weeks > 50)
+                {
+                    await _messageService.PostAsync($"Are you kidding me? 😲 Please input a valid number!");
+                    context.Wait(MessageReceivedAsync);
+                }
+                else
+                {
+                    context.Done<string>($"Great! You have been pregnant for {weeks} weeks!");
+                }
             }
             else
             {

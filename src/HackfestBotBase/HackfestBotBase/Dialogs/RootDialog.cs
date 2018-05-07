@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using HackfestBotBase.Services;
@@ -421,10 +422,18 @@ namespace HackfestBotBase.Dialogs
         {
             string email = await result;
             // TODO: check address...
-            _botDataService.SetEmail(context, email);
-            await context.PostAsync($"You email address is updated to {email}");
-            await ShowConfirmOtherRequestDialog(context);
-
+            Regex regex = new Regex(@"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
+            if (regex.IsMatch(email))
+            {
+                _botDataService.SetEmail(context, email);
+                await context.PostAsync($"You email address is updated to {email}");
+                await ShowConfirmOtherRequestDialog(context);
+            }
+            else
+            {
+                PromptDialog.Text(context, ResumeAfterConfirmationEmailText,
+                    "Your input is not a valid email address. Please tell me your current email address:", "Sorry I didn't get that - try again!");
+            }
         }
 
 
